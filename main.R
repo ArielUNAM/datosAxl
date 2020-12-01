@@ -29,7 +29,6 @@ filtroNA <- function(df,var){
     aux
 }
 
-#Error en la forma de exportar los datos
 
 df2csv <- function(df,lestaciones,year)
 {
@@ -37,10 +36,15 @@ df2csv <- function(df,lestaciones,year)
     else{flag=FALSE}
     for(station in lestaciones)
     {
-        aux <- day2month(hour2day(df,flag,station))
+        aux <- hour2day(df,flag,station)
+        aux <- day2month(aux)
+
+        print("Aux-")
+        print(aux)
+        print("--------------")
         if(aux$flag)
         {
-          write.csv(,file=paste0("data/transfData/",station,"_",year,"_tmp",".csv"))
+          write.csv(aux$df,file=paste0("data/transfData/",station,"_",year,"_tmp",".csv"))
         }
         else {
            print("pass")
@@ -57,18 +61,18 @@ hour2day <- function(df,flag,station)
     else {
        aux <- mutate(df,date = dmy_hms(as.character(date))) %>% mutate(month=month(date),day=day(date)) %>% group_by(month,day)%>%filter(id_station==station) %>% summarise(mean=mean(value),var=var(value),max=max(value),min=min(value))
     }
-    return(aux)
+    return(as.data.frame(aux))
 }
 day2month <- function(df)
 {
-    if(nrow(df) > 0)
+    if(nrow(df) != 0)
     {
-        aux <- group_by(df,month) %>% summarize(mean=mean(mean),var=var(mean),max=max(mean),min(mean))
-        output = list("flag"=FALSE,"df"=as.data.frame(aux))
+        aux <- df %>% group_by(month) %>% summarize(avg=mean(mean),var=var(mean),max=max(mean),min = min(mean))
+        output = list("flag"=TRUE,"df"=as.data.frame(aux))
         return(output)
     }
     else {
-        output = list("flag"=FALSE,"df"=as.data.frame(aux))
+        output = list("flag"=FALSE,"df"=FALSE)
         return(output)
     }
     
