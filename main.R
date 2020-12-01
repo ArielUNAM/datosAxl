@@ -30,6 +30,15 @@ filtroNA <- function(df,var){
 }
 
 
+#' @title Transforma un dataframe a CSV
+#' @description Función que crea un CSV para cada estación que contenga el dataframe de entrada
+#' @param df Es un dataframe que contiene una columna de valores y una columnda de datos, los datos no deben tener NAN
+#' @param lestaciones Lista de estaciones que contiene el dataframe
+#' @param year Argumento que acompañara al nombre del archivo
+#' @details Para facilitar el preprocesamiento se realizo una función que será introducida a un for para mejorar el funcionamieno
+#' @examples
+#' df2csv(df,['MER','LAA','CCA'],2020)
+#' @export
 df2csv <- function(df,lestaciones,year)
 {
     if(colnames(df)[2] == "cve_station"){flag = TRUE}
@@ -52,6 +61,15 @@ df2csv <- function(df,lestaciones,year)
     }
     
 }
+
+#' @title Transformación de horas a dias
+#' @description Regresa un dataframe del promedio diario
+#' @param df Es un dataframe que se obtiene de la lectura del CSV
+#' @param flag Dependiendo del año se modifica el identificador del archivo
+#' @details Para minimizar las funciones se uso programación funcional 
+#' @examples
+#' hour2day(df,TRUE,'MER')
+#' @export
 hour2day <- function(df,flag,station) 
 {
     if(flag)
@@ -63,6 +81,15 @@ hour2day <- function(df,flag,station)
     }
     return(as.data.frame(aux))
 }
+
+#' @title Transformación de dias a meses
+#' @description Regresa un dataframe del promedio mensual
+#' @param df Es un dataframe que se obtiene de la lectura del CSV
+#' @param flag Dependiendo del año se modifica el identificador del archivo
+#' @details Para minimizar las funciones se uso programación funcional 
+#' @examples
+#' day2month(df)
+#' @export
 day2month <- function(df)
 {
     if(nrow(df) != 0)
