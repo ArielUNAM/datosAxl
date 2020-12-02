@@ -35,6 +35,41 @@ filtroNA <- function(df,var){
     return(aux)
 }
 
+#' @title Transforma un dataframe a CSV
+#' @description Función que crea un CSV para cada estación que contenga el dataframe de entrada
+#' @param df Es un dataframe que contiene una columna de valores y una columnda de datos, los datos no deben tener NAN
+#' @param lestaciones Lista de estaciones que contiene el dataframe
+#' @param year Argumento que acompañara al nombre del archivo
+#' @details Para facilitar el preprocesamiento se realizo una función que será introducida a un for para mejorar el funcionamieno
+#' @examples
+#' df2csv(df,['MER','LAA','CCA'],2020)
+#' @export
+df2csv2 <- function(df,lestaciones,year,var)
+{
+    df <- mutate(df,date = dmy_hms(as.character(date)))%>%mutate(month=month(date),day=day(date))
+    if(colnames(df)[2] == "cve_station"){flag = TRUE}
+    else{flag=FALSE}
+    out <- list()
+    for(station in lestaciones)
+    {
+        aux <- hour2day(df,flag,station)
+        aux <- day2month(aux)
+        aux <- month2year(aux$df)
+
+        if(aux$flag)
+        {
+          aux$df$stn <- station
+          out[[station]] <- as.vector(aux$df[1,])
+        }
+        else {
+           print("pass")
+        }
+    }
+    aux <- data.frame(matrix(unlist(out), nrow=length(out), byrow=T))
+    colnames(aux) <- c("mean","var","max","min","station")
+    print(aux)
+    write.csv(aux,file=paste0("data/transfData/",year,"_",var,".csv"))   
+}
 
 #' @title Transforma un dataframe a CSV
 #' @description Función que crea un CSV para cada estación que contenga el dataframe de entrada

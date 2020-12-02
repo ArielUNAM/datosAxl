@@ -15,13 +15,27 @@ source("main.R")
 #unidades <- read.csv('data/cat_unidades.csv')
 estaciones <- read.csv('data/cat_estacion.csv')
 lestaciones <- as.character(estaciones$Catalogo.de.estaciones[-1])
+lyears = 2000:2020
+lcontaminantes = c("CO","NOX","PM2.5","SO2")
+lmeteorologicos = c("TMP")
 
-#dm1 <- read.csv('data/meteorología_2020.csv',skip = 10, header = T)
-#df2csv(filtroNA(dm1,'TMP'),lestaciones,2020,'TMP')
+for(year in lyears)
+{
+    for(contaminante in lcontaminantes)
+    {
+        df <- read.csv(paste0("data/contaminantes_",year,".csv"),skip = 10, header = T)
+        df2csv2(filtroNA(df,contaminante),lestaciones,year,contaminante)
+    }
+}
+for(year in lyears)
+{
+    for(meteorologico in lmeteorologicos)
+    {
+        df <- read.csv(paste0("data/meteorología_",year,".csv"),skip = 10, header = T)
+        df2csv2(filtroNA(df,meteorologico),lestaciones,year,meteorologico)
+    }
+}
 
-print("2000")
 
-dm2 <- read.csv('data/meteorología_2000.csv',skip = 10, header = T)
-#print(head(filtroNA(dm2,'RH')))
-df2csv(filtroNA(dm,'CO'),lestaciones,2000,'CO')
+
 
