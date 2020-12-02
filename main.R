@@ -44,7 +44,7 @@ filtroNA <- function(df,var){
 #' @examples
 #' df2csv(df,['MER','LAA','CCA'],2020)
 #' @export
-df2csv2 <- function(df,lestaciones,year,var)
+df2csv2 <- function(df,lestaciones,year,var,path)
 {
     df <- mutate(df,date = dmy_hms(as.character(date)))%>%mutate(month=month(date),day=day(date))
     if(colnames(df)[2] == "cve_station"){flag = TRUE}
@@ -65,10 +65,16 @@ df2csv2 <- function(df,lestaciones,year,var)
            print("pass")
         }
     }
-    aux <- data.frame(matrix(unlist(out), nrow=length(out), byrow=T))
-    colnames(aux) <- c("mean","var","max","min","station")
-    print(aux)
-    write.csv(aux,file=paste0("data/transfData/",year,"_",var,".csv"))   
+    if(length(out)!=0)
+    {   
+        aux <- data.frame(matrix(unlist(out), nrow=length(out), byrow=T))
+        colnames(aux) <- c("mean","var","max","min","station")
+        write.csv(aux,file=paste0(path,year,"_",var,".csv"))   
+    }
+    else {
+       print("pass")
+    }
+    
 }
 
 #' @title Transforma un dataframe a CSV
@@ -80,7 +86,7 @@ df2csv2 <- function(df,lestaciones,year,var)
 #' @examples
 #' df2csv(df,['MER','LAA','CCA'],2020)
 #' @export
-df2csv <- function(df,lestaciones,year,var)
+df2csv <- function(df,lestaciones,year,var,path)
 {
     df <- mutate(df,date = dmy_hms(as.character(date)))%>%mutate(month=month(date),day=day(date))
     if(colnames(df)[2] == "cve_station"){flag = TRUE}
@@ -93,7 +99,7 @@ df2csv <- function(df,lestaciones,year,var)
 
         if(aux$flag)
         {
-          write.csv(aux$df,file=paste0("data/transfData/",station,"_",year,"_",var,".csv"))
+          write.csv(aux$df,file=paste0(path,station,"_",year,"_",var,".csv"))
         }
         else {
            print("pass")
@@ -117,7 +123,7 @@ hour2day <- function(df,flag,station)
         aux <- df%>%filter(cve_station==station)%>%group_by(month,day)%>%summarise(mean=mean(value),var=var(value),max=max(value),min=min(value))
     }
     else {
-       aux <- d%>%filter(id_station==station)%>%group_by(month,day)%>%summarise(mean=mean(value),var=var(value),max=max(value),min=min(value))
+       aux <- df%>%filter(id_station==station)%>%group_by(month,day)%>%summarise(mean=mean(value),var=var(value),max=max(value),min=min(value))
     }
     return(as.data.frame(aux))
 }
