@@ -16,8 +16,12 @@ source("main.R")
 estaciones <- read.csv('data/cat_estacion.csv')
 lestaciones <- as.character(estaciones$Catalogo.de.estaciones[-1])
 
-dm1 <- read.csv('data/meteorología_2020.csv',skip = 10, header = T)
-df2csv(filtroNA(dm1,'TMP'),lestaciones,2020)
+#dm1 <- read.csv('data/meteorología_2020.csv',skip = 10, header = T)
+#df2csv(filtroNA(dm1,'TMP'),lestaciones,2020,'TMP')
+
+print("2000")
+
 dm2 <- read.csv('data/meteorología_2000.csv',skip = 10, header = T)
-df2csv(filtroNA(dm2,'TMP'),lestaciones,2000)
+#print(head(filtroNA(dm2,'RH')))
+df2csv(filtroNA(dm,'CO'),lestaciones,2000,'CO')
 
