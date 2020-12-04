@@ -22,4 +22,3 @@ La combinación de ambas funciones permite facilitar el preprocesamiento de los 
 
 -----------------------
 
-Es importante 
