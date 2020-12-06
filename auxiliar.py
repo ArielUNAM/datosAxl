@@ -2,9 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 path2save = "./data/transfData/"
-df = pd.read_csv("./data/transfData/prueba.csv") 
+df = pd.read_csv("./data/base.csv") 
 
-lyears = list(range(2000,2020))  
+lyears = list(range(2000,2021))  
 lvar = ["TMP","CO","NOX","PM2.5","SO2"]
 
 for var in lvar:
